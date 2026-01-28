@@ -6,7 +6,8 @@ cursor = conn.cursor()
 query = """
     SELECT playerID, yearID, teamID, HR
     FROM batting
-    WHERE playerID like "ruth%"
+    WHERE teamID = "PHI" and yearID = 1976 and HR > 0
+    ORDER BY HR DESC
 """
 cursor.execute(query)
 records = cursor.fetchall()
