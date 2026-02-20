@@ -19,17 +19,26 @@ cursor.execute(query)
 records = cursor.fetchall()
 conn.close()
 
-#players = []
-#for record in records:
- #   players.append(record[0])
+def f(playerID):
+    conn = sqlite3.connect('../baseball.db')
+    cursor = conn.cursor()
+    query = """ SELECT CAST (yearID AS text), HR FROM batting
+    where TeamID = 'PHI' and playerID = ?
+    """
+    cursor.execute(query, [playerID])
+    records = cursor.fetchall()
+    conn.close()
+    df = pd.DataFrame(records, columns=["Year", "Home Runs"])
+    return df
 
 
 with gr.Blocks() as iface:
-    gr.Dropdown(records, interactive=True)
-    gr.LinePlot(records, x = "Year", y = "Homeruns")
+    playerDrop = gr.Dropdown(records, interactive=True)
+    plot = gr.LinePlot(x = "Year", y = "Home Runs")
+    playerDrop.change(fn = f, inputs = [playerDrop], outputs = [plot])
 
 iface.launch()
 
 
 
-print(records)
+#print(records)
